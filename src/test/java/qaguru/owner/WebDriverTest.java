@@ -18,11 +18,7 @@ public class WebDriverTest {
     private  WebDriver driver;
 
     @BeforeEach
-    public void initDriver() throws Exception {
-        System.setProperty("webdriver.remote", "false"); // for test purpose!!!!
-        System.setProperty("webdriver.host", "http://localhost:4444/wd/hub"); // for test purpose!!!!
-        System.setProperty("webdriver.browser", "chrome"); // for test purpose!!!!
-
+    public void initDriver() {
         WebDriverConfig config = ConfigFactory.create(WebDriverConfig.class, System.getProperties());
         initWebDriver(config);
     }
@@ -39,10 +35,10 @@ public class WebDriverTest {
         driver.quit();
     }
 
-    private void initWebDriver(WebDriverConfig config) {
-        if (config.isRemote()) {
+    private void initWebDriver(WebDriverConfig webDriverConfig) {
+        if (webDriverConfig.isRemote()) {
             DesiredCapabilities capabilities;
-            switch (config.getBrowser()) {
+            switch (webDriverConfig.getBrowser()) {
                 case CHROME: {
                     capabilities = DesiredCapabilities.chrome();
                 }
@@ -59,7 +55,7 @@ public class WebDriverTest {
                     break;
                 }
             }
-            driver = new RemoteWebDriver(config.getURL(), capabilities);
+            driver = new RemoteWebDriver(webDriverConfig.getURL(), capabilities);
         } else {
             driver = new ChromeDriver();
         }
